@@ -27,7 +27,7 @@ _layout = Extension(
 )
 
 setup(
-    name="s_gd2",
+    name="sgdpy",
     version="1.3",
     author="Jonathan Zheng",
     author_email="jxz12@ic.ac.uk",

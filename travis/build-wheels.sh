@@ -34,17 +34,17 @@ for PYBIN in /opt/python/*/bin; do
     done
 
     # Install and test
-    "${PYBIN}/pip" install s_gd2 --no-index -f "${REPAIR_DIR}"
+    "${PYBIN}/pip" install sgdpy --no-index -f "${REPAIR_DIR}"
     cd /io/cpp/
     "${PYBIN}/python" setup.py test
     cd ..
 
     # Clean up
-    "${PYBIN}/pip" uninstall -y s_gd2
+    "${PYBIN}/pip" uninstall -y sgdpy
     rm -rf build
     
     # Move wheel to output directory
-    for whl in $(ls -1 ${REPAIR_DIR} | grep s_gd2); do
+    for whl in $(ls -1 ${REPAIR_DIR} | grep sgdpy); do
       mv ${REPAIR_DIR}/$whl "${OUT_DIR}"
     done
 done
