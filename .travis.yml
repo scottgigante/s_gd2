@@ -164,4 +164,5 @@ cache:
   - directories:
     - $HOME/.cache/pip
     - $HOME/Library/Caches/Homebrew
+    - $HOME/.pyenv
 

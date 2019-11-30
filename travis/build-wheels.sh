@@ -4,7 +4,13 @@ set -e -x
 # Auditwheel requirements
 yum install -y atlas-devel
 
-OUT_DIR=/io/cpp/dist/
+SOURCE_DIR="/io/cpp"
+PKG_NAME="sgdpy"
+
+# Ensure README gets packaged
+mv /io/README.md $SOURCE_DIR
+
+OUT_DIR="${SOURCE_DIR}/dist/"
 mkdir -p "${OUT_DIR}"
 for PYBIN in /opt/python/*/bin; do
     # Select python version corresponding to this test
@@ -13,13 +19,13 @@ for PYBIN in /opt/python/*/bin; do
     fi
 
     # Setup
-    TMP_DIR="wheelhouse_tmp/${PLAT}/${PYBIN}"
-    REPAIR_DIR="wheelhouse_repair/${PLAT}/${PYBIN}"
+    TMP_DIR="${SOURCE_DIR}/wheelhouse_tmp/${PLAT}/${PYBIN}"
+    REPAIR_DIR="${SOURCE_DIR}/wheelhouse_repair/${PLAT}/${PYBIN}"
     mkdir -p $TMP_DIR
     mkdir -p $REPAIR_DIR
 
     # Compile wheels
-    cd /io/cpp
+    cd $SOURCE_DIR
     "${PYBIN}/pip" install numpy
     "${PYBIN}/pip" wheel . -w "${TMP_DIR}"
 
@@ -30,18 +36,18 @@ for PYBIN in /opt/python/*/bin; do
     done
 
     # Install and test
-    "${PYBIN}/pip" install sgdpy --no-index -f "${REPAIR_DIR}"
-    cd /io/cpp/
+    "${PYBIN}/pip" install $PKG_NAME --no-index -f "${REPAIR_DIR}"
+    cd $SOURCE_DIR
     "${PYBIN}/pip" install .[test]
     "${PYBIN}/python" setup.py test
     cd ..
 
     # Clean up
-    "${PYBIN}/pip" uninstall -y sgdpy
+    "${PYBIN}/pip" uninstall -y $PKG_NAME
     rm -rf build
     
     # Move wheel to output directory
-    for whl in $(ls -1 ${REPAIR_DIR} | grep sgdpy); do
+    for whl in $(ls -1 ${REPAIR_DIR} | grep $PKG_NAME); do
       mv ${REPAIR_DIR}/$whl "${OUT_DIR}"
     done
 done
