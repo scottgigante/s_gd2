@@ -32,6 +32,7 @@ for PYBIN in /opt/python/*/bin; do
     # Install and test
     "${PYBIN}/pip" install sgdpy --no-index -f "${REPAIR_DIR}"
     cd /io/cpp/
+    "${PYBIN}/pip" install .[test]
     "${PYBIN}/python" setup.py test
     cd ..
 
